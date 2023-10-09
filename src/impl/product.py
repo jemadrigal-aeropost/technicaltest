@@ -10,11 +10,11 @@ class product:
     def productSearch(self, product_name):
         try:
             con = self.db_connection.connection.cursor()
-            con.execute("select product_id, product_name, price from products where upper(product_name) = upper('{0}')".format(product_name))
+            con.execute("select product_id, product_name, price, stock_quantity from products where upper(product_name) like upper('{0}')".format(product_name))
             data = con.fetchall()
             product_list = []
             for prod in data:
-                product_list.append( {'product_id':prod[0], 'product_name':prod[1], 'price':prod[2]} )
+                product_list.append( {'product_id':prod[0], 'product_name':prod[1], 'price':prod[2], 'stock_quantity':prod[3]} )
 
             return jsonify({'product_list':product_list, 'status':1, 'error':None})
         except Exception as ex:

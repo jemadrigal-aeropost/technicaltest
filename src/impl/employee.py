@@ -50,7 +50,6 @@ class employee:
         try:
             con = self.db_connection.connection.cursor()
             con.execute("insert into employees(first_name,last_name,email,phone,salary) values('{0}','{1}','{2}','{3}',{4})".format(employee['first_name'],employee['last_name'],employee['email'], employee['phone'],employee['salary']))
-            data = con.fetchone()
             self.db_connection.connection.commit()
            
             return jsonify({'status':1, 'error':None})

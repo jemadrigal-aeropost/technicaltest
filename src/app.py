@@ -1,12 +1,16 @@
 from flask import Flask, jsonify, request
 from flask_mysqldb import MySQL
+from flask_cors import CORS
+
 from config.config import config 
 from impl.employee import employee
 from impl.product import product
+from impl.customer import customer
+from impl.order import order
 
 app = Flask(__name__)
-
 db_connection = MySQL(app)
+CORS(app)
 
 @app.route('/')
 def index():
@@ -39,7 +43,6 @@ def getAllEmployeeById(id):
 @app.route('/create/',methods=['POST'])
 def createEmployee():
     try:
-        print(request.json)
         return employee(db_connection).createEmployee(request.json)
     except Exception as ex:
         print(ex)
@@ -76,6 +79,20 @@ def topSellingProducts():
         print(ex)
         return jsonify({'product_list':[], 'status':-1, 'error':'Main topSellingProducts Error calculating top selling products'})
 
+@app.route('/customer/<id>',methods=['GET'])
+def getAllcustomerById(id):
+    try:
+        return customer(db_connection).getCustomerById(id)
+    except Exception as ex:
+        return jsonify({'customer':None, 'status':-1, 'error':'Main getAllcustomerById Error getting the customer'})
+
+@app.route('/createOrder/',methods=['POST'])
+def createOrder():
+    try:
+        return order(db_connection).createOrder(request.json)
+    except Exception as ex:
+        print(ex)
+        return jsonify({'status':-1, 'error':'Main createOrder Error saving order'})
 
 if __name__ == '__main__':
     app.config.from_object(config['configuration'])
